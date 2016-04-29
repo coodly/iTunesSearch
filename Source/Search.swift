@@ -14,3 +14,28 @@
  * limitations under the License.
  */
 
+public enum Media: String {
+    case Movie = "movie"
+    case Podcast = "podcast"
+    case Music = "music"
+    case MusicVideo = "musicVideo"
+    case Audiobook = "audiobook"
+    case ShortFilm = "shortFilm"
+    case TVShow = "tvShow"
+    case Software = "software"
+    case Ebook = "ebook"
+    case All = "all"
+}
+
+public class Search {
+    private let fetch: NetworkFetch
+    
+    public init(networkFetch: NetworkFetch) {
+        fetch = networkFetch
+    }
+    
+    public func search(media: Media = .Movie, term: String) {
+        let request = SearchRequest(fetch: fetch, params: ["term": term, "media": media.rawValue])
+        request.execute()
+    }
+}
