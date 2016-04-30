@@ -25,6 +25,16 @@ class SearchRequest: NetworkRequest {
     }
     
     override func execute() {
-        GET("/search", parameters: params)
+        var encoded = params
+        if let term = encoded["term"] as? String {
+            encoded["term"] = term.stringByReplacingOccurrencesOfString(" ", withString: "+")
+        }
+        GET("/search", parameters: encoded)
+    }
+    
+    override func handleSuccessResponse(data: [String : AnyObject]) {
+        let hits = SearchHit.loadResults(data)
+        Logging.log("Loaded \(hits.count) hits")
+        resultHandler(hits, nil)
     }
 }

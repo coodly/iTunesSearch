@@ -26,7 +26,7 @@ private enum Method: String {
 class NetworkRequest {
     let fetch: NetworkFetch
     var apiKey: String!
-    var resulthandler: ((AnyObject?, NSError?) -> ())!
+    var resultHandler: ((Any?, NSError?) -> ())!
     
     init(fetch: NetworkFetch) {
         self.fetch = fetch
@@ -89,6 +89,6 @@ class NetworkRequest {
     
     func handleErrorResponse(error: NSError?) {
         Logging.log("handleErrorResponse")
-        resulthandler(nil, error)
+        resultHandler(nil, error)
     }
 }

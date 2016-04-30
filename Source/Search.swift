@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import Foundation
+
 public enum Media: String {
     case Movie = "movie"
     case Podcast = "podcast"
@@ -27,6 +29,8 @@ public enum Media: String {
     case All = "all"
 }
 
+public typealias SearchResultClosure = ([SearchHit], NSError?) -> ()
+
 public class Search {
     private let fetch: NetworkFetch
     
@@ -34,8 +38,17 @@ public class Search {
         fetch = networkFetch
     }
     
-    public func search(media: Media = .Movie, term: String) {
+    public func search(media: Media = .Movie, term: String, completion: SearchResultClosure) {
         let request = SearchRequest(fetch: fetch, params: ["term": term, "media": media.rawValue])
+        request.resultHandler = {
+            result, error in
+            
+            if let result = result as? [SearchHit] {
+                completion(result, error)
+            } else {
+                completion([], error)
+            }
+        }
         request.execute()
     }
 }
