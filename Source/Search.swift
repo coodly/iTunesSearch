@@ -38,8 +38,8 @@ public class Search {
         fetch = networkFetch
     }
     
-    public func search(media: Media = .Movie, term: String, completion: SearchResultClosure) {
-        let request = SearchRequest(fetch: fetch, params: ["term": term, "media": media.rawValue])
+    public func search(media: Media = .Movie, term: String, country: String = "US", completion: SearchResultClosure) {
+        let request = SearchRequest(fetch: fetch, params: ["term": term, "media": media.rawValue, "country": country])
         request.resultHandler = {
             result, error in
             
