@@ -19,11 +19,17 @@ import Foundation
 private typealias Dictionary = [String: AnyObject]
 
 public struct SearchHit {
+    private static let dateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        return formatter
+    }()
     public let trackName: String
     public let trackId: Int
     public let artworkUrl30: NSURL
     public let artworkUrl60: NSURL
     public let artworkUrl100: NSURL
+    public let releaseDate: NSDate
     
     static func loadResults(data: [String: AnyObject]) -> [SearchHit] {
         guard let results = data["results"] as? [Dictionary] else {
@@ -69,7 +75,12 @@ public struct SearchHit {
             Logging.log("artworkUrl100 not found")
             return nil
         }
-     
-        return SearchHit(trackName: trackName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100)
+        
+        guard let dateString = data["releaseDate"] as? String, let date = SearchHit.dateFormatter.dateFromString(dateString) else {
+            Logging.log("Release date not found")
+            return nil
+        }
+        
+        return SearchHit(trackName: trackName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date)
     }
 }
