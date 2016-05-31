@@ -25,6 +25,7 @@ public struct SearchHit {
         return formatter
     }()
     public let trackName: String
+    public let artistName: String
     public let trackId: Int
     public let artworkUrl30: NSURL
     public let artworkUrl60: NSURL
@@ -81,6 +82,11 @@ public struct SearchHit {
             return nil
         }
         
-        return SearchHit(trackName: trackName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date)
+        guard let artistName = data["artistName"] as? String else {
+            Logging.log("Artist name not found")
+            return nil
+        }
+        
+        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date)
     }
 }
