@@ -31,6 +31,7 @@ public struct SearchHit {
     public let artworkUrl60: NSURL
     public let artworkUrl100: NSURL
     public let releaseDate: NSDate
+    public let primaryGenreName: String
     
     static func loadResults(data: [String: AnyObject]) -> [SearchHit] {
         guard let results = data["results"] as? [Dictionary] else {
@@ -87,6 +88,11 @@ public struct SearchHit {
             return nil
         }
         
-        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date)
+        guard let primaryGenre = data["primaryGenreName"] as? String else {
+            Logging.log("No genre name")
+            return nil
+        }
+        
+        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date, primaryGenreName: primaryGenre)
     }
 }
