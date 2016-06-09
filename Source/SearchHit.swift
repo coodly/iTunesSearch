@@ -32,6 +32,7 @@ public struct SearchHit {
     public let artworkUrl100: NSURL
     public let releaseDate: NSDate
     public let primaryGenreName: String
+    public let price: Price?
     
     static func loadResults(data: [String: AnyObject]) -> [SearchHit] {
         guard let results = data["results"] as? [Dictionary] else {
@@ -93,6 +94,8 @@ public struct SearchHit {
             return nil
         }
         
-        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date, primaryGenreName: primaryGenre)
+        let price = Price.loadFromData(data)
+        
+        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date, primaryGenreName: primaryGenre, price: price)
     }
 }
