@@ -19,22 +19,22 @@ import Foundation
 private typealias Dictionary = [String: AnyObject]
 
 public struct SearchHit {
-    private static let dateFormatter: NSDateFormatter = {
-        let formatter = NSDateFormatter()
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
         return formatter
     }()
     public let trackName: String
     public let artistName: String
     public let trackId: Int
-    public let artworkUrl30: NSURL
-    public let artworkUrl60: NSURL
-    public let artworkUrl100: NSURL
-    public let releaseDate: NSDate
+    public let artworkUrl30: URL
+    public let artworkUrl60: URL
+    public let artworkUrl100: URL
+    public let releaseDate: Date
     public let primaryGenreName: String
     public let price: Price?
     
-    static func loadResults(data: [String: AnyObject]) -> [SearchHit] {
+    static func loadResults(_ data: [String: AnyObject]) -> [SearchHit] {
         guard let results = data["results"] as? [Dictionary] else {
             Logging.log("results element not found")
             return []
@@ -53,7 +53,7 @@ public struct SearchHit {
         return hits
     }
     
-    static func loadHitFromData(data: [String: AnyObject]) -> SearchHit? {
+    static func loadHitFromData(_ data: [String: AnyObject]) -> SearchHit? {
         guard let trackName = data["trackName"] as? String else {
             Logging.log("track name not found")
             return nil
@@ -64,22 +64,22 @@ public struct SearchHit {
             return nil
         }
         
-        guard let artwork30 = data["artworkUrl30"] as? String, artworkUrl30 = NSURL(string: artwork30) else {
+        guard let artwork30 = data["artworkUrl30"] as? String, artworkUrl30 = URL(string: artwork30) else {
             Logging.log("artworkUrl30 not found")
             return nil
         }
 
-        guard let artwork60 = data["artworkUrl60"] as? String, let artworkUrl60 = NSURL(string: artwork60) else {
+        guard let artwork60 = data["artworkUrl60"] as? String, let artworkUrl60 = URL(string: artwork60) else {
             Logging.log("artworkUrl60 not found")
             return nil
         }
 
-        guard let artwork100 = data["artworkUrl100"] as? String, let artworkUrl100 = NSURL(string: artwork100) else {
+        guard let artwork100 = data["artworkUrl100"] as? String, let artworkUrl100 = URL(string: artwork100) else {
             Logging.log("artworkUrl100 not found")
             return nil
         }
         
-        guard let dateString = data["releaseDate"] as? String, let date = SearchHit.dateFormatter.dateFromString(dateString) else {
+        guard let dateString = data["releaseDate"] as? String, let date = SearchHit.dateFormatter.date(from: dateString) else {
             Logging.log("Release date not found")
             return nil
         }

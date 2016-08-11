@@ -23,7 +23,7 @@ public struct Price {
     public let trackRentalPrice: NSDecimalNumber?
     public let trackHdRentalPrice: NSDecimalNumber?
     
-    static func loadFromData(data: [String: AnyObject]) -> Price? {
+    static func loadFromData(_ data: [String: AnyObject]) -> Price? {
         guard let currency = data["currency"] as? String else {
             Logging.log("No currency")
             return nil
@@ -44,6 +44,6 @@ public struct Price {
 
 private extension Double {
     func decimalNumber() -> NSDecimalNumber {
-        return NSDecimalNumber(decimal: NSNumber(double: self).decimalValue)
+        return NSDecimalNumber(decimal: NSNumber(value: self).decimalValue)
     }
 }
