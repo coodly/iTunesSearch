@@ -16,7 +16,7 @@
 
 import Foundation
 
-public typealias NetworkFetchClosure = (Data?, Int, NSError?) -> ()
+public typealias NetworkFetchClosure = (Data?, URLResponse?, Error?) -> ()
 
 public protocol NetworkFetch {
     func fetchRequest(_ request: URLRequest, completion: NetworkFetchClosure)

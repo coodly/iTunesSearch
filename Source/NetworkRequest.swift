@@ -63,7 +63,7 @@ class NetworkRequest {
         request.httpMethod = method.rawValue
         
         fetch.fetchRequest(request as URLRequest) {
-            data, code, error in
+            data, response, error in
             
             if let error = error {
                 Logging.log("Fetch error \(error)")
