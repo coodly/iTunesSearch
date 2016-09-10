@@ -64,7 +64,7 @@ public struct SearchHit {
             return nil
         }
         
-        guard let artwork30 = data["artworkUrl30"] as? String, artworkUrl30 = URL(string: artwork30) else {
+        guard let artwork30 = data["artworkUrl30"] as? String, let artworkUrl30 = URL(string: artwork30) else {
             Logging.log("artworkUrl30 not found")
             return nil
         }

@@ -27,7 +27,7 @@ class SearchRequest: NetworkRequest {
     override func execute() {
         var encoded = params
         if let term = encoded["term"] as? String {
-            encoded["term"] = term.replacingOccurrences(of: " ", with: "+")
+            encoded["term"] = term.replacingOccurrences(of: " ", with: "+") as AnyObject?
         }
         GET("/search", parameters: encoded)
     }

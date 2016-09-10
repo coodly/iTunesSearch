@@ -29,7 +29,7 @@ public enum Media: String {
     case All = "all"
 }
 
-public typealias SearchResultClosure = ([SearchHit], NSError?) -> ()
+public typealias SearchResultClosure = ([SearchHit], Error?) -> ()
 
 public class Search {
     private let fetch: NetworkFetch
@@ -38,8 +38,8 @@ public class Search {
         fetch = networkFetch
     }
     
-    public func search(_ media: Media = .Movie, term: String, country: String = "US", completion: SearchResultClosure) {
-        let request = SearchRequest(fetch: fetch, params: ["term": term, "media": media.rawValue, "country": country])
+    public func search(_ media: Media = .Movie, term: String, country: String = "US", completion: @escaping SearchResultClosure) {
+        let request = SearchRequest(fetch: fetch, params: ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject])
         request.resultHandler = {
             result, error in
             
