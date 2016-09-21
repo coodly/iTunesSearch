@@ -62,7 +62,7 @@ class NetworkRequest {
         let request = NSMutableURLRequest(url: requestURL)
         request.httpMethod = method.rawValue
         
-        fetch.fetchRequest(request as URLRequest) {
+        fetch.fetch(request as URLRequest) {
             data, response, error in
             
             if let error = error {

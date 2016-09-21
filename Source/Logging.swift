@@ -16,16 +16,20 @@
 
 import Foundation
 
-public protocol LoggingDelegate: class {
+public protocol Logger {
     func log<T>(_ object: T, file: String, function: String, line: Int)
 }
 
 public class Logging {
-    public weak var delegate: LoggingDelegate?
+    private var logger: Logger?
     
-    public static let sharedInstance = Logging()
+    internal static let sharedInstance = Logging()
+    
+    public class func set(logger: Logger) {
+        sharedInstance.logger = logger
+    }
     
     internal class func log<T>(_ object: T, file: String = #file, function: String = #function, line: Int = #line) {
-        sharedInstance.delegate?.log(object, file: file, function: function, line: line)
+        sharedInstance.logger?.log(object, file: file, function: function, line: line)
     }
 }
