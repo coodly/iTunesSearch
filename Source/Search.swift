@@ -31,15 +31,13 @@ public enum Media: String {
 
 public typealias SearchResultClosure = ([SearchHit], Error?) -> ()
 
-public class Search {
-    private let fetch: NetworkFetch
-    
+public class Search: InjectionHandler {
     public init(networkFetch: NetworkFetch) {
-        fetch = networkFetch
+        Injector.sharedInstance.fetch = networkFetch
     }
     
     public func search(_ media: Media = .Movie, term: String, country: String = "US", completion: @escaping SearchResultClosure) {
-        let request = SearchRequest(fetch: fetch, params: ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject])
+        let request = SearchRequest(params: ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject])
         request.resultHandler = {
             result, error in
             
@@ -49,6 +47,23 @@ public class Search {
                 completion([], error)
             }
         }
+        inject(into: request)
+        request.execute()
+    }
+    
+    public func lookup(of id: Int, completion: @escaping SearchResultClosure) {
+        Logging.log("Perform lookup for \(id)")
+        let request = LookupRequest(id: id)
+        request.resultHandler = {
+            result, error in
+            
+            if let result = result as? [SearchHit] {
+                completion(result, error)
+            } else {
+                completion([], error)
+            }
+        }
+        inject(into: request)
         request.execute()
     }
 }

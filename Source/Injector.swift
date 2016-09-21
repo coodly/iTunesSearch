@@ -16,24 +16,24 @@
 
 import Foundation
 
-class SearchRequest: NetworkRequest {
-    private let params: [String: AnyObject]
+protocol InjectionHandler {
+    func inject(into: AnyObject)
+}
 
-    init(params: [String: AnyObject]) {
-        self.params = params
+extension InjectionHandler {
+    func inject(into: AnyObject) {
+        Injector.sharedInstance.inject(into: into)
     }
+}
+
+class Injector {
+    static let sharedInstance = Injector()
     
-    override func execute() {
-        var encoded = params
-        if let term = encoded["term"] as? String {
-            encoded["term"] = term.replacingOccurrences(of: " ", with: "+") as AnyObject?
+    var fetch: NetworkFetch!
+    
+    func inject(into: AnyObject) {
+        if var consumer = into as? FetchConsumer {
+            consumer.fetch = fetch
         }
-        GET("/search", parameters: encoded)
-    }
-    
-    override func handleSuccessResponse(_ data: [String : AnyObject]) {
-        let hits = SearchHit.loadResults(data)
-        Logging.log("Loaded \(hits.count) hits")
-        resultHandler(hits, nil)
     }
 }

@@ -23,14 +23,11 @@ private enum Method: String {
     case GET
 }
 
-class NetworkRequest {
-    let fetch: NetworkFetch
+class NetworkRequest: FetchConsumer {
+    var fetch: NetworkFetch!
+    
     var apiKey: String!
     var resultHandler: ((Any?, Error?) -> ())!
-    
-    init(fetch: NetworkFetch) {
-        self.fetch = fetch
-    }
     
     func execute() {
         fatalError("Override \(#function)")

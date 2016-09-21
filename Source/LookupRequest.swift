@@ -16,19 +16,14 @@
 
 import Foundation
 
-class SearchRequest: NetworkRequest {
-    private let params: [String: AnyObject]
-
-    init(params: [String: AnyObject]) {
-        self.params = params
+class LookupRequest: NetworkRequest {
+    private let lookupId: Int
+    init(id: Int) {
+        lookupId = id
     }
     
     override func execute() {
-        var encoded = params
-        if let term = encoded["term"] as? String {
-            encoded["term"] = term.replacingOccurrences(of: " ", with: "+") as AnyObject?
-        }
-        GET("/search", parameters: encoded)
+        GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject])
     }
     
     override func handleSuccessResponse(_ data: [String : AnyObject]) {
