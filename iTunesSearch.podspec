@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'iTunesSearch'
-  s.version = '0.2.1'
+  s.version = '0.2.2'
   s.license = 'Apache 2'
   s.summary = 'Swift interface for iTunes Search'
   s.homepage = 'https://github.com/coodly/iTunesSearch'
