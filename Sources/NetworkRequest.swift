@@ -64,27 +64,27 @@ class NetworkRequest: FetchConsumer {
             
             if let error = error {
                 Logging.log("Fetch error \(error)")
-                self.handleErrorResponse(error)
+                self.handle(error: error)
             }
             
             if let data = data {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    self.handleSuccessResponse(json as! [String: AnyObject])
+                    self.handle(success: json as! [String: AnyObject])
                 } catch let error as NSError {
-                    self.handleErrorResponse(error)
+                    self.handle(error: error)
                 }
             } else {
-                self.handleErrorResponse(error)
+                self.handle(error: error)
             }
         }
     }
     
-    func handleSuccessResponse(_ data: [String: AnyObject]) {
+    func handle(success data: [String: AnyObject]) {
         Logging.log("handleSuccessResponse")
     }
     
-    func handleErrorResponse(_ error: Error?) {
+    func handle(error: Error?) {
         Logging.log("handleErrorResponse")
         resultHandler(nil, error)
     }

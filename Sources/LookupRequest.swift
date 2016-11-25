@@ -26,7 +26,7 @@ class LookupRequest: NetworkRequest {
         GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject])
     }
     
-    override func handleSuccessResponse(_ data: [String : AnyObject]) {
+    override func handle(success data: [String : AnyObject]) {
         let hits = SearchHit.loadResults(data)
         Logging.log("Loaded \(hits.count) hits")
         resultHandler(hits, nil)
