@@ -36,8 +36,9 @@ public class Search: InjectionHandler {
         Injector.sharedInstance.fetch = networkFetch
     }
     
-    public func search(_ media: Media = .Movie, term: String, country: String = "US", completion: @escaping SearchResultClosure) {
-        let request = SearchRequest(params: ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject])
+    public func search(_ media: Media = .Movie, term: String, country: String = "US", limit: Int = 50, completion: @escaping SearchResultClosure) {
+        let searchParams = ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject, "limit": "\(limit)" as AnyObject]
+        let request = SearchRequest(params: searchParams)
         request.resultHandler = {
             result, error in
             
@@ -51,9 +52,9 @@ public class Search: InjectionHandler {
         request.execute()
     }
     
-    public func lookup(of id: Int, completion: @escaping SearchResultClosure) {
+    public func lookup(of id: Int, in country: String, completion: @escaping SearchResultClosure) {
         Logging.log("Perform lookup for \(id)")
-        let request = LookupRequest(id: id)
+        let request = LookupRequest(id: id, country: country)
         request.resultHandler = {
             result, error in
             

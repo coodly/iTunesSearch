@@ -16,7 +16,7 @@
 
 import Foundation
 
-class SearchRequest: NetworkRequest {
+internal class SearchRequest: NetworkRequest {
     private let params: [String: AnyObject]
 
     init(params: [String: AnyObject]) {

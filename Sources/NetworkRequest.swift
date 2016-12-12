@@ -23,7 +23,7 @@ private enum Method: String {
     case GET
 }
 
-class NetworkRequest: FetchConsumer {
+internal class NetworkRequest: FetchConsumer {
     var fetch: NetworkFetch!
     
     var apiKey: String!

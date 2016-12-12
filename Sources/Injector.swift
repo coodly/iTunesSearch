@@ -16,17 +16,17 @@
 
 import Foundation
 
-protocol InjectionHandler {
+internal protocol InjectionHandler {
     func inject(into: AnyObject)
 }
 
-extension InjectionHandler {
+internal extension InjectionHandler {
     func inject(into: AnyObject) {
         Injector.sharedInstance.inject(into: into)
     }
 }
 
-class Injector {
+internal class Injector {
     static let sharedInstance = Injector()
     
     var fetch: NetworkFetch!

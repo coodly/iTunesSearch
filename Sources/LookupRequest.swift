@@ -16,14 +16,16 @@
 
 import Foundation
 
-class LookupRequest: NetworkRequest {
+internal class LookupRequest: NetworkRequest {
     private let lookupId: Int
-    init(id: Int) {
+    private let lookupCountry: String
+    init(id: Int, country: String) {
         lookupId = id
+        lookupCountry = country
     }
     
     override func execute() {
-        GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject])
+        GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject, "country": lookupCountry as AnyObject])
     }
     
     override func handle(success data: [String : AnyObject]) {
