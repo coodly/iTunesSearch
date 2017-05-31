@@ -30,6 +30,7 @@ public struct SearchHit {
     public let artworkUrl30: URL
     public let artworkUrl60: URL
     public let artworkUrl100: URL
+    public let trackViewUrl: URL?
     public let releaseDate: Date
     public let primaryGenreName: String
     public let price: Price?
@@ -96,6 +97,13 @@ public struct SearchHit {
         
         let price = Price.loadFromData(data)
         
-        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, releaseDate: date, primaryGenreName: primaryGenre, price: price)
+        let viewURL: URL?
+        if let string = data["trackViewUrl"] as? String, let url = URL(string: string) {
+            viewURL = url
+        } else {
+            viewURL = nil
+        }
+    
+        return SearchHit(trackName: trackName, artistName: artistName, trackId: trackId, artworkUrl30: artworkUrl30, artworkUrl60: artworkUrl60, artworkUrl100: artworkUrl100, trackViewUrl: viewURL, releaseDate: date, primaryGenreName: primaryGenre, price: price)
     }
 }
