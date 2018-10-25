@@ -59,7 +59,7 @@ public struct SearchHit {
             return nil
         }
         
-        guard let trackId = data["trackId"] as? Int else {
+        guard let trackId = data["trackId"] as? Int ?? Int(data["trackId"] as? String ?? "") else {
             Logging.log("trackId not found")
             return nil
         }
