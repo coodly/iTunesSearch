@@ -31,8 +31,7 @@ internal class SearchRequest: NetworkRequest {
         GET("/search", parameters: encoded)
     }
     
-    override func handle(success data: [String : AnyObject]) {
-        let hits = SearchHit.loadResults(data)
+    override func handle(success hits: [SearchHit]) {
         Logging.log("Loaded \(hits.count) hits")
         resultHandler(hits, nil)
     }

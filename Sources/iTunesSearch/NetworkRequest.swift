@@ -68,9 +68,15 @@ internal class NetworkRequest: FetchConsumer {
             }
             
             if let data = data {
+                let decoder = JSONDecoder()
+                
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                decoder.dateDecodingStrategy = .formatted(formatter)
+
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    self.handle(success: json as! [String: AnyObject])
+                    let result = try decoder.decode(SearchResults.self, from: data)
+                    self.handle(success: result.results)
                 } catch let error as NSError {
                     self.handle(error: error)
                 }
@@ -80,7 +86,7 @@ internal class NetworkRequest: FetchConsumer {
         }
     }
     
-    func handle(success data: [String: AnyObject]) {
+    func handle(success hits: [SearchHit]) {
         Logging.log("handleSuccessResponse")
     }
     
