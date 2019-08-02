@@ -28,7 +28,8 @@ public struct SearchHit: Codable {
     public let artworkUrl30: URL
     public let artworkUrl60: URL
     public let artworkUrl100: URL
-    public let longDescription: String
+    public let shortDescription: String?
+    public let longDescription: String?
     public let trackPrice: Double?
     public let trackRentalPrice: Double?
     public let trackHdPrice: Double?
