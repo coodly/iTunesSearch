@@ -78,7 +78,11 @@ internal class NetworkRequest: FetchConsumer {
                     let result = try decoder.decode(SearchResults.self, from: data)
                     self.handle(success: result.results)
                 } catch let error as NSError {
-                    self.handle(error: error)
+                    if let tunesError = try? decoder.decode(TunesError.self, from: data) {
+                        self.handle(error: tunesError)
+                    } else {
+                        self.handle(error: error)
+                    }
                 }
             } else {
                 self.handle(error: error)
