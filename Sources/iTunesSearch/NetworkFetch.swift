@@ -16,11 +16,11 @@
 
 import Foundation
 #if canImport(FoundationNetworking)
-import FoundationNetworking
+  import FoundationNetworking
 #endif
 
 public typealias NetworkFetchClosure = (Data?, URLResponse?, Error?) -> ()
 
 public protocol NetworkFetch {
-    func fetch(_ request: URLRequest, completion: @escaping NetworkFetchClosure)
+  func fetch(_ request: URLRequest, completion: @escaping NetworkFetchClosure)
 }

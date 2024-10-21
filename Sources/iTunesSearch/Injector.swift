@@ -17,23 +17,23 @@
 import Foundation
 
 internal protocol InjectionHandler {
-    func inject(into: AnyObject)
+  func inject(into: AnyObject)
 }
 
 internal extension InjectionHandler {
-    func inject(into: AnyObject) {
-        Injector.sharedInstance.inject(into: into)
-    }
+  func inject(into: AnyObject) {
+    Injector.sharedInstance.inject(into: into)
+  }
 }
 
 internal class Injector {
-    static let sharedInstance = Injector()
-    
-    var fetch: NetworkFetch!
-    
-    func inject(into: AnyObject) {
-        if var consumer = into as? FetchConsumer {
-            consumer.fetch = fetch
-        }
+  static let sharedInstance = Injector()
+
+  var fetch: NetworkFetch!
+
+  func inject(into: AnyObject) {
+    if var consumer = into as? FetchConsumer {
+      consumer.fetch = fetch
     }
+  }
 }

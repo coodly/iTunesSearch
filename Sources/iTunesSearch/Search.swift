@@ -17,54 +17,54 @@
 import Foundation
 
 public enum Media: String {
-    case Movie = "movie"
-    case Podcast = "podcast"
-    case Music = "music"
-    case MusicVideo = "musicVideo"
-    case Audiobook = "audiobook"
-    case ShortFilm = "shortFilm"
-    case TVShow = "tvShow"
-    case Software = "software"
-    case Ebook = "ebook"
-    case All = "all"
+  case Movie = "movie"
+  case Podcast = "podcast"
+  case Music = "music"
+  case MusicVideo = "musicVideo"
+  case Audiobook = "audiobook"
+  case ShortFilm = "shortFilm"
+  case TVShow = "tvShow"
+  case Software = "software"
+  case Ebook = "ebook"
+  case All = "all"
 }
 
 public typealias SearchResultClosure = ([SearchHit], Error?) -> ()
 
 public class Search: InjectionHandler {
-    public init(networkFetch: NetworkFetch) {
-        Injector.sharedInstance.fetch = networkFetch
+  public init(networkFetch: NetworkFetch) {
+    Injector.sharedInstance.fetch = networkFetch
+  }
+
+  public func search(_ media: Media = .Movie, term: String, country: String = "US", limit: Int = 50, completion: @escaping SearchResultClosure) {
+    let searchParams = ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject, "limit": "\(limit)" as AnyObject]
+    let request = SearchRequest(params: searchParams)
+    request.resultHandler = {
+      result, error in
+
+      if let result = result as? [SearchHit] {
+        completion(result, error)
+      } else {
+        completion([], error)
+      }
     }
-    
-    public func search(_ media: Media = .Movie, term: String, country: String = "US", limit: Int = 50, completion: @escaping SearchResultClosure) {
-        let searchParams = ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject, "limit": "\(limit)" as AnyObject]
-        let request = SearchRequest(params: searchParams)
-        request.resultHandler = {
-            result, error in
-            
-            if let result = result as? [SearchHit] {
-                completion(result, error)
-            } else {
-                completion([], error)
-            }
-        }
-        inject(into: request)
-        request.execute()
+    inject(into: request)
+    request.execute()
+  }
+
+  public func lookup(of id: Int, in country: String, completion: @escaping SearchResultClosure) {
+    Logging.log("Perform lookup for \(id)")
+    let request = LookupRequest(id: id, country: country)
+    request.resultHandler = {
+      result, error in
+
+      if let result = result as? [SearchHit] {
+        completion(result, error)
+      } else {
+        completion([], error)
+      }
     }
-    
-    public func lookup(of id: Int, in country: String, completion: @escaping SearchResultClosure) {
-        Logging.log("Perform lookup for \(id)")
-        let request = LookupRequest(id: id, country: country)
-        request.resultHandler = {
-            result, error in
-            
-            if let result = result as? [SearchHit] {
-                completion(result, error)
-            } else {
-                completion([], error)
-            }
-        }
-        inject(into: request)
-        request.execute()
-    }
+    inject(into: request)
+    request.execute()
+  }
 }

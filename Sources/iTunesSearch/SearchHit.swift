@@ -17,21 +17,21 @@
 import Foundation
 
 internal struct SearchResults: Codable {
-    let resultCount: Int
-    let results: [SearchHit]
+  let resultCount: Int
+  let results: [SearchHit]
 }
 
 public struct SearchHit: Codable {
-    public let trackId: Int
-    public let trackName: String
-    public let releaseDate: Date
-    public let artworkUrl30: URL
-    public let artworkUrl60: URL
-    public let artworkUrl100: URL
-    public let shortDescription: String?
-    public let longDescription: String?
-    public let trackPrice: Double?
-    public let trackRentalPrice: Double?
-    public let trackHdPrice: Double?
-    public let trackHdRentalPrice: Double?
+  public let trackId: Int
+  public let trackName: String
+  public let releaseDate: Date
+  public let artworkUrl30: URL
+  public let artworkUrl60: URL
+  public let artworkUrl100: URL
+  public let shortDescription: String?
+  public let longDescription: String?
+  public let trackPrice: Double?
+  public let trackRentalPrice: Double?
+  public let trackHdPrice: Double?
+  public let trackHdRentalPrice: Double?
 }

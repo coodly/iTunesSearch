@@ -17,19 +17,19 @@
 import Foundation
 
 public protocol Logger {
-    func log<T>(_ object: T, file: String, function: String, line: Int)
+  func log<T>(_ object: T, file: String, function: String, line: Int)
 }
 
 public class Logging {
-    private var logger: Logger?
-    
-    internal static let sharedInstance = Logging()
-    
-    public class func set(logger: Logger) {
-        sharedInstance.logger = logger
-    }
-    
-    internal class func log<T>(_ object: T, file: String = #file, function: String = #function, line: Int = #line) {
-        sharedInstance.logger?.log(object, file: file, function: function, line: line)
-    }
+  private var logger: Logger?
+
+  internal static let sharedInstance = Logging()
+
+  public class func set(logger: Logger) {
+    sharedInstance.logger = logger
+  }
+
+  internal class func log<T>(_ object: T, file: String = #file, function: String = #function, line: Int = #line) {
+    sharedInstance.logger?.log(object, file: file, function: function, line: line)
+  }
 }

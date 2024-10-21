@@ -17,5 +17,5 @@
 import Foundation
 
 internal protocol FetchConsumer {
-    var fetch: NetworkFetch! { get set }
+  var fetch: NetworkFetch! { get set }
 }

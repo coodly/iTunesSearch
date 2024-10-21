@@ -17,19 +17,19 @@
 import Foundation
 
 internal class LookupRequest: NetworkRequest {
-    private let lookupId: Int
-    private let lookupCountry: String
-    init(id: Int, country: String) {
-        lookupId = id
-        lookupCountry = country
-    }
-    
-    override func execute() {
-        GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject, "country": lookupCountry as AnyObject])
-    }
-    
-    override func handle(success hits: [SearchHit]) {
-        Logging.log("Loaded \(hits.count) hits")
-        resultHandler(hits, nil)
-    }
+  private let lookupId: Int
+  private let lookupCountry: String
+  init(id: Int, country: String) {
+    lookupId = id
+    lookupCountry = country
+  }
+
+  override func execute() {
+    GET("/lookup", parameters: ["id": "\(lookupId)" as AnyObject, "country": lookupCountry as AnyObject])
+  }
+
+  override func handle(success hits: [SearchHit]) {
+    Logging.log("Loaded \(hits.count) hits")
+    resultHandler(hits, nil)
+  }
 }

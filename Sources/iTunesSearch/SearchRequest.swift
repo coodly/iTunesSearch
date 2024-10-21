@@ -17,22 +17,22 @@
 import Foundation
 
 internal class SearchRequest: NetworkRequest {
-    private let params: [String: AnyObject]
+  private let params: [String: AnyObject]
 
-    init(params: [String: AnyObject]) {
-        self.params = params
+  init(params: [String: AnyObject]) {
+    self.params = params
+  }
+
+  override func execute() {
+    var encoded = params
+    if let term = encoded["term"] as? String {
+      encoded["term"] = term.replacingOccurrences(of: " ", with: "+") as AnyObject?
     }
-    
-    override func execute() {
-        var encoded = params
-        if let term = encoded["term"] as? String {
-            encoded["term"] = term.replacingOccurrences(of: " ", with: "+") as AnyObject?
-        }
-        GET("/search", parameters: encoded)
-    }
-    
-    override func handle(success hits: [SearchHit]) {
-        Logging.log("Loaded \(hits.count) hits")
-        resultHandler(hits, nil)
-    }
+    GET("/search", parameters: encoded)
+  }
+
+  override func handle(success hits: [SearchHit]) {
+    Logging.log("Loaded \(hits.count) hits")
+    resultHandler(hits, nil)
+  }
 }
