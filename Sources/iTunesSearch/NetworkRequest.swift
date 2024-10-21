@@ -64,6 +64,12 @@ internal class NetworkRequest: FetchConsumer {
         
     fetch.fetch(request as URLRequest) {
       data, response, error in
+      
+      if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+        for (name, value) in httpResponse.allHeaderFields {
+          Logging.log("\t\(name): \(value)")
+        }
+      }
             
       if let error = error {
         Logging.log("Fetch error \(error)")
