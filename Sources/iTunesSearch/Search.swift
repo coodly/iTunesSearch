@@ -16,55 +16,79 @@
 
 import Foundation
 
-public enum Media: String {
-  case Movie = "movie"
-  case Podcast = "podcast"
-  case Music = "music"
-  case MusicVideo = "musicVideo"
-  case Audiobook = "audiobook"
-  case ShortFilm = "shortFilm"
-  case TVShow = "tvShow"
-  case Software = "software"
-  case Ebook = "ebook"
-  case All = "all"
+public enum Media: String, Sendable {
+  case movie
+  case podcast
+  case music
+  case musicVideo
+  case audiobook
+  case shortFilm
+  case tvShow
+  case software
+  case ebook
+  case all
 }
 
 public typealias SearchResultClosure = ([SearchHit], Error?) -> ()
 
-public class Search: InjectionHandler {
+private let APIServer = "https://itunes.apple.com"
+
+public struct Search: Sendable {
+  private let fetch: NetworkFetch
+  
   public init(networkFetch: NetworkFetch) {
-    Injector.sharedInstance.fetch = networkFetch
+    self.fetch = networkFetch
   }
+  
+  private func get<Result: Decodable>(path: String, parameters: [String: String]) async throws -> Result {
+    var components = URLComponents(url: URL(string: APIServer)!, resolvingAgainstBaseURL: true)!
+    components.path = components.path + path
+        
+    var queryItems = [URLQueryItem]()
+          
+    for (name, value) in parameters {
+      queryItems.append(URLQueryItem(name: name, value: value))
+    }
+          
+    components.queryItems = queryItems
+        
+    let requestURL = components.url!
+    let request = NSMutableURLRequest(url: requestURL)
+    request.httpMethod = "GET"
 
-  public func search(_ media: Media = .Movie, term: String, country: String = "US", limit: Int = 50, completion: @escaping SearchResultClosure) {
-    let searchParams = ["term": term as AnyObject, "media": media.rawValue as AnyObject, "country": country as AnyObject, "limit": "\(limit)" as AnyObject]
-    let request = SearchRequest(params: searchParams)
-    request.resultHandler = {
-      result, error in
-
-      if let result = result as? [SearchHit] {
-        completion(result, error)
+    let (data, response) = try await URLSession.shared.data(for: request as URLRequest)
+    
+    let decoder = JSONDecoder()
+            
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    decoder.dateDecodingStrategy = .formatted(formatter)
+    
+    do {
+      return try decoder.decode(Result.self, from: data)
+    } catch let error as NSError {
+      if let tunesError = try? decoder.decode(TunesError.self, from: data) {
+        throw tunesError
       } else {
-        completion([], error)
+        throw error
       }
     }
-    inject(into: request)
-    request.execute()
   }
 
-  public func lookup(of id: Int, in country: String, completion: @escaping SearchResultClosure) {
+  public func search(_ media: Media = .movie, term: String, country: String = "US", limit: Int = 50) async throws -> [SearchHit] {
+    let searchParams: [String: String] = [
+      "term": term.replacingOccurrences(of: " ", with: "+"),
+      "media": media.rawValue,
+      "country": country,
+      "limit": String(describing: limit)
+    ]
+    let result: SearchResults = try await get(path: "/search", parameters: searchParams)
+    return result.results
+  }
+
+  public func lookup(of id: Int, in country: String) async throws -> [SearchHit] {
     Logging.log("Perform lookup for \(id)")
-    let request = LookupRequest(id: id, country: country)
-    request.resultHandler = {
-      result, error in
-
-      if let result = result as? [SearchHit] {
-        completion(result, error)
-      } else {
-        completion([], error)
-      }
-    }
-    inject(into: request)
-    request.execute()
+    let result: SearchResults = try await get(path: "/lookup", parameters: ["id": String(describing: id), "country": country])
+    return result.results
   }
 }

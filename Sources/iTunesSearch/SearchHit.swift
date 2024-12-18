@@ -16,12 +16,12 @@
 
 import Foundation
 
-internal struct SearchResults: Codable {
+internal struct SearchResults: Decodable {
   let resultCount: Int
   let results: [SearchHit]
 }
 
-public struct SearchHit: Codable {
+public struct SearchHit: Decodable, Sendable {
   public let trackId: Int
   public let trackName: String
   public let releaseDate: Date

@@ -21,6 +21,14 @@ import Foundation
 
 public typealias NetworkFetchClosure = (Data?, URLResponse?, Error?) -> ()
 
-public protocol NetworkFetch {
-  func fetch(_ request: URLRequest, completion: @escaping NetworkFetchClosure)
+public struct NetworkFetch: Sendable {
+  let onFetch: @Sendable (URLRequest) async throws -> (Data, URLResponse)
+  
+  public init(onFetch: @escaping @Sendable (URLRequest) async throws -> (Data, URLResponse)) {
+    self.onFetch = onFetch
+  }
+  
+  func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
+    try await onFetch(request)
+  }
 }
