@@ -55,6 +55,8 @@ public struct Search: Sendable {
     let requestURL = components.url!
     let request = NSMutableURLRequest(url: requestURL)
     request.httpMethod = "GET"
+    
+    Logging.log(request.url!)
 
     let (data, response) = try await URLSession.shared.data(for: request as URLRequest)
     
