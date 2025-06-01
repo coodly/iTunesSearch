@@ -58,6 +58,7 @@ public struct Search: Sendable {
     let requestURL = components.url!
     let request = NSMutableURLRequest(url: requestURL)
     request.httpMethod = "GET"
+    request.addValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15", forHTTPHeaderField: "User-Agent")
     
     Logging.log(request.url!)
 
